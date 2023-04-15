@@ -1,0 +1,54 @@
+version: "3.9"
+
+networks:
+  cass3x-demo:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.1.0/16"
+          gateway: "172.16.1.1"
+
+services:
+  cass3x:
+    networks:
+      cass3x-demo:
+        ipv4_address: 172.16.1.2
+    build:
+      context: .
+      dockerfile: ./cassandra.dockerfile
+      labels: 
+        - "cass3x:demo"
+    ports:
+      - "9042:9042"
+      - "9500:9500"
+    logging:
+      driver: journald
+
+  prometheus:
+    networks:
+      cass3x-demo:
+        ipv4_address: 172.16.1.3
+    build:
+      context: .
+      dockerfile: ./prometheus.dockerfile
+      labels:
+        - "cass-metrics:demo"
+    ports:
+      - "9090:9090"
+    logging:
+        driver: journald
+
+  ndbench:
+    networks:
+      cass3x-demo:
+        ipv4_address: 172.16.1.4
+    build:
+      context: .
+      dockerfile: ./ndbench.dockerfile
+      labels:
+        - "cass-bench:demo"
+    ports:
+      - "8080:8080"
+    logging:
+      driver: journald

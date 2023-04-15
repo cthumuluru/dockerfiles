@@ -1,0 +1,96 @@
+# Cassandra storage config YAML
+
+cluster_name: 'test-cluster'
+num_tokens: 256 #
+
+# Hinted handoff configuration - disabled for single node setup.
+hinted_handoff_enabled: false
+# max_hint_window_in_ms: 10800000 # 3 hours
+# hinted_handoff_throttle_in_kb: 1024
+# max_hints_delivery_threads: 2
+# hints_directory: /var/lib/cassandra/hints
+# hints_flush_period_in_ms: 10000
+# max_hints_file_size_in_mb: 128
+
+# Partitioner configuration
+partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+
+# Data directories
+# data_file_directories:
+#    - /var/lib/cassandra/data
+
+# Commit log config
+# commitlog_directory: /var/lib/cassandra/commitlog
+commitlog_sync: periodic # writes are ack'ed immediately unlike "batch"
+commitlog_sync_period_in_ms: 10000
+commitlog_segment_size_in_mb: 32
+commitlog_total_space_in_mb: 8192
+
+# Key cache config
+key_cache_size_in_mb: 0 # disable
+# key_cache_save_period: 14400 # 4 hours
+# key_cache_keys_to_save: 100
+
+# Row cache config
+# row_cache_class_name: org.apache.cassandra.cache.OHCProvider # Off-heap row cache
+row_cache_size_in_mb: 0 # disable
+# row_cache_save_period: 0
+# row_cache_keys_to_save: 100
+
+# Counter cache config
+counter_cache_size_in_mb: 0 # disable
+# counter_cache_save_period: 7200 # 2 hours
+# counter_cache_keys_to_save: 100
+# cache_load_timeout_seconds: 30
+
+
+# Seed config
+seed_provider:
+    - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+      parameters:
+          - seeds: "172.16.1.2"
+
+# Concurrency config
+concurrent_reads: 8
+concurrent_writes: 16
+# concurrent_counter_writes: 32
+
+# Memtable config
+memtable_heap_space_in_mb: 8
+memtable_offheap_space_in_mb: 8
+memtable_allocation_type: offheap_buffers # heap_buffers
+memtable_flush_writers: 2
+
+# CQL config
+start_native_transport: true
+native_transport_port: 9042
+
+# Thrift config
+start_rpc: false
+# rpc_address: localhost
+# rpc_port: 9160
+# rpc_keepalive: true
+# rpc_server_type: sync
+# thrift_framed_transport_size_in_mb: 15
+
+listen_address: 172.16.1.2
+incremental_backups: false
+
+# Compaction config
+concurrent_compactors: 1
+compaction_throughput_mb_per_sec: 16
+
+# Timeouts config
+read_request_timeout_in_ms: 5000
+write_request_timeout_in_ms: 2000
+request_timeout_in_ms: 10000
+
+
+# tombstone_warn_threshold: 1000
+# tombstone_failure_threshold: 100000
+# compaction_large_partition_warning_threshold_mb: 100
+
+enable_materialized_views: false 	# disble
+enable_sasi_indexes: false 			# disable
+enable_drop_compact_storage: false 	# disable
+endpoint_snitch: SimpleSnitch
