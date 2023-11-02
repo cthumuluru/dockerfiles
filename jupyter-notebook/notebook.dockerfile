@@ -7,8 +7,9 @@ RUN apt-get update && \
 	pip install notebook 
 
 # install kernels
-RUN pip install ilua bash_kernel && \
-  python3 -m bash_kernel.install
+RUN pip install ilua bash_kernel jupyter-c-kernel && \
+  python3 -m bash_kernel.install && \
+  install_c_kernel --user
 
 RUN useradd -U notebook -m
 RUN mkdir /data && \
