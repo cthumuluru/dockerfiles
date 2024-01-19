@@ -1,0 +1,22 @@
+FROM neovim:latest
+
+ARG pgbranch=REL_14_STABLE
+
+# PostgreSQL dependencies
+RUN apt-get update && \
+  apt-get install -y -q git bear make cmake libreadline8 libreadline-dev bison flex zlib1g-dev
+
+RUN mkdir -p /root/git_ws && \
+  cd /root/git_ws && \
+  git clone  https://github.com/postgres/postgres.git && \
+  cd /root/git_ws/postgres && \
+  git checkout $pgbranch
+
+# Compile and make database
+RUN cd /root/git_ws/postgres && \
+  ./configure --without-icu && \
+  bear -- make all
+
+# Launch dev env
+WORKDIR /root/git_ws/postgres
+ENTRYPOINT [ "nvim", "." ]

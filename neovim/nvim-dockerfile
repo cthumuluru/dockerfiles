@@ -1,0 +1,44 @@
+FROM ubuntu:22.04 as builder
+
+# nvim release branch
+ARG nvimver=release-0.9
+
+RUN apt-get update && \
+  apt-get install -y -q ninja-build gettext cmake unzip curl wget git make lua5.4 g++
+
+
+# C++ LSP support
+RUN apt-get install -y -q clangd-12 bear
+
+# Add Java
+RUN apt-get install -y -q openjdk-19-jdk
+
+# Build neovim
+RUN mkdir /root/git_ws && \
+  cd /root/git_ws && \
+  git clone https://github.com/neovim/neovim.git && \
+  cd /root/git_ws/neovim && \
+  git checkout $nvimver
+
+RUN cd /root/git_ws/neovim && \
+  make CMAKE_BUILD_TYPE=Release && \
+  make install
+
+# Add nerd-fonts
+RUN mkdir -p /root/.local/share/fonts/NerdFonts && \
+  cd /root/.local/share/fonts/NerdFonts && \
+  wget https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/AnonymousPro/Bold-Italic/AnonymiceProNerdFont-BoldItalic.ttf && \
+  wget https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/AnonymousPro/Bold/AnonymiceProNerdFont-Bold.ttf && \
+  wget https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/AnonymousPro/Italic/AnonymiceProNerdFont-Italic.ttf && \
+  wget https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/AnonymousPro/Regular/AnonymiceProNerdFont-Regular.ttf
+
+# Add neovim config
+RUN mkdir -p /root/.config && \
+  cd /root/.config && \
+  git clone https://github.com/cthumuluru/neovim-devenv.git nvim && \
+  cd ./nvim && \
+  git checkout devenv
+
+
+WORKDIR /root/git_ws
+# ENTRYPOINT [ "nvim", "." ]
