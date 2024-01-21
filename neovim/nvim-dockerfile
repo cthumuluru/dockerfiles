@@ -4,11 +4,11 @@ FROM ubuntu:22.04 as builder
 ARG nvimver=release-0.9
 
 RUN apt-get update && \
-  apt-get install -y -q ninja-build gettext cmake unzip tar curl wget git make lua5.4 g++
+  apt-get install -y -q ninja-build gettext cmake unzip tar gzip curl wget git make lua5.4
 
 
-# C++ LSP support
-RUN apt-get install -y -q clangd-12 bear
+# C++ and LSP support
+RUN apt-get install -y -q g++ clangd-12 bear
 
 # Add Java
 RUN apt-get install -y -q openjdk-19-jdk
@@ -36,9 +36,7 @@ RUN mkdir -p /root/.local/share/fonts/NerdFonts && \
 RUN mkdir -p /root/.config && \
   cd /root/.config && \
   git clone https://github.com/cthumuluru/neovim-devenv.git nvim && \
-  cd ./nvim && \
-  git checkout devenv
-
+  cd ./nvim
 
 WORKDIR /root/git_ws
 # ENTRYPOINT [ "nvim", "." ]
