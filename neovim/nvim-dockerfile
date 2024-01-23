@@ -10,7 +10,10 @@ RUN apt-get update && \
 RUN apt-get install -y -q g++ clangd-12 bear
 
 # Add Java
-RUN apt-get install -y -q maven
+RUN apt-get install -y -q openjdk-17-jdk maven
+
+# Add Python
+RUN apt-get install python3
 
 # Build neovim
 RUN mkdir /root/git_ws && \
