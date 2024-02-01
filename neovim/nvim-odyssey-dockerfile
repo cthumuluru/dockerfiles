@@ -1,0 +1,22 @@
+FROM neovim:latest
+
+ARG tag=1.3
+
+# Odyssey dependencies
+RUN apt-get update && \
+  apt-get install -y -q git bear make cmake libreadline8 libreadline-dev bison flex zlib1g-dev && \
+  apt-get install -y -q libpq-dev postgresql-server-dev-all
+
+RUN mkdir -p /root/git_ws && \
+  cd /root/git_ws && \
+  git clone https://github.com/yandex/odyssey.git && \
+  cd /root/git_ws/odyssey && \
+  git checkout $tag
+
+# Compile and make database
+RUN cd /root/git_ws/odyssey && \
+  bear -- make local_build
+
+# Launch dev env
+WORKDIR /root/git_ws/odyssey
+ENTRYPOINT [ "nvim", "." ]
