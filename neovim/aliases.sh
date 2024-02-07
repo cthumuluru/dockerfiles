@@ -2,7 +2,8 @@
 
 alias nvim-build="docker build --network=host -t neovim . -f nvim-dockerfile"
 alias nvim-stop="docker container rm -f nvim-dev"
-alias nvim-start="docker run --name=nvim-dev --network=host -it -v .:/workspace neovim /bin/bash"
+alias nvim-start="docker run -d --name=nvim-dev --network=host -it -v /workspace:/workspace neovim sleep infinity"
+alias nvim-attach="docker exec -it nvim-dev /bin/bash"
 
 alias pg-dev-build="docker build --network=host -t pg-dev . -f nvim-pg-dockerfile"
 alias pg-dev-stop="docker container rm -f pg-dev"

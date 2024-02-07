@@ -23,6 +23,12 @@ RUN cd /tmp && \
 # Add Go to path
 ENV PATH="${PATH}:/usr/local/go/bin"
 
+# Add Rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+
+# Add Rust to path
+ENV PATH="${PATH}:${HOME}/.cargo/bin"
+
 # Build neovim
 RUN mkdir /root/git_ws && \
   cd /root/git_ws && \
