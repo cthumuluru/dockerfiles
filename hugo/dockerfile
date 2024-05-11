@@ -1,0 +1,8 @@
+FROM ubuntu:22.04
+ARG DOCKER_USER=chandrat
+
+RUN apt-get update && \
+  apt-get install -q -y hugo git vim
+
+RUN useradd -m -U $DOCKER_USER 
+USER $DOCKER_USER
